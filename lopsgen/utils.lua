@@ -10,6 +10,17 @@ function read_text_file (fname)
     return payload
 end
 
+function read_text_file_lines (fname)
+    f, err = assert(io.open(fname, "r"))
+
+    if err then return nil, err end
+
+    payload = f:lines()
+    f:close()
+
+    return payload
+end
+
 
 function scan_dir(dirname)
     -- local i, t, popen = 0, {}, io.popen
