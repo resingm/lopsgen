@@ -1,31 +1,35 @@
 
-function read_text_file (fname)
-    f, err = assert(io.open(fname, "r"))
+function ReadTextFile (fname)
+    local f, err = assert(io.open(fname, "r"))
     
     if err then return nil, err end
 
-    payload = f:read("a")
+    local payload = f:read("a")
     f:close()
 
     return payload
 end
 
-function read_text_file_lines (fname)
-    f, err = assert(io.open(fname, "r"))
+function ReadTextFileLines (fname)
+    local f, err = assert(io.open(fname, "r"))
+    local payload = {}
 
     if err then return nil, err end
 
-    payload = f:lines()
-    f:close()
+    for l in f:lines() do
+        table.insert(payload, l)
+    end
 
+    f:close()
     return payload
 end
 
 
-function scan_dir(dirname)
+function ScanDir(dirname)
     -- local i, t, popen = 0, {}, io.popen
     local i, files = 0, {}
     local pfile, err = io.popen('ls -a ' .. dirname .. '/*.md')
+    pfile = pfile or {}
 
     if err then return nil, err end
 
@@ -37,4 +41,12 @@ function scan_dir(dirname)
     pfile:close()
 
     return files
+end
+
+function Write (fname, payload)
+    local f, err = assert(io.open(fname, "w"))
+    if err then return err end
+
+    f:write(payload)
+    f:close()
 end

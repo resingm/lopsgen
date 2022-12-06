@@ -1,58 +1,58 @@
-require "utils"
+require "lopsgen/utils"
+
+LineType = {
+    META = 1,
+    HEADER = 2,
+    BODY = 3,
+}
 
 Page = {}
 
-function Page:new(filename, content)
-    local t = setmetatable({}, { __index = Page })
+function Page:new(o)
+    -- local t = setmetatable({}, { __index = Page })
+    local o = o or {}
+    setmetatable(o, self)
 
-    t.fname = filename
-    t.content = content
+    o.header = {}
+    o.body = {}
+    o.properties = {}
 
-    t.title = nil
-    t.subtitle = nil
-    t.date = nil
-    t.header_title = nil
-    t.header_subtitle = nil
-    t.header_short = nil
-    t.body = nil
-
-    return t
+    self.__index = self
+    return o
 end
 
 function Page:load_and_parse_page()
-    local lines = utils.read_text_file_lines(self.fname)
-
-    local title = ""
-    local subtitle = ""
-    local date = ""
-    local header_title = ""
-    local header_subtitle = ""
-    local header_short = ""
-    local body = ""
-
+    local lines = ReadTextFileLines(self.fname)
     local is_header = false
 
-    for i, l in ipairs(lines) do
-
-        -- 
-        -- if string.find{s=l, pattern="{::header}", plain=true} then is_header = true end
-        -- if string.find{s=l, pattern="{:/header}"}, plain=true} then is_header = false end
-
+    for i, l in ipairs(lines or {}) do
         -- define is_header to ensure header is parsed properly
+        local line_type = LineType.BODY;
+
         if string.find(l, "{::header}") then is_header = true end
         if string.find(l, "{:/header}") then is_header = false end
 
-        -- if string.find(l, "<!--", plain=true) then
-            -- parse meta data (title, subtitle, date, ...)
-        -- elseif string.find(l, "{::header}", plain=true) then
-            -- parse header data
-        -- end
-
-        if string.find(l, "<!--%s*.+:.+%s-->") then
-            -- Parse the meta information in there
+        local line_type = LineType.BODY
+        
+        if string.find(l, "<!--.+-->") then
+            line_type = LineType.META
+        elseif is_header then
+            line_type = LineType.HEADER
         else
-            -- Add line to a regular body
+            line_type = LineType.BODY
+        end
+
+        if line_type == LineType.META then
+            -- TODO: Fails to read with underscore. Check whats going wrong
+            local p = "<!%-%-%s*([%w_]+)%s*:%s*(%g+)%s*%-%->"
+
+            for k, v in string.gmatch(l, p) do
+                self.properties[k] = v
+            end
+        elseif line_type == LineType.HEADER then
+            table.insert(self.header, l)
+        elseif line_type == LineType.BODY then
+            table.insert(self.body, l)
         end
     end
-    
 end
