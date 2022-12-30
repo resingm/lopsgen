@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }} - {{ subtitle }}</title>
+  <link rel="shortcut icon" href="https://www.maxresing.de/favicon.ico">
+  <link rel="stylesheet" href="https://www.maxresing.de/css/min-1-5-0.css">
+  <link rel="stylesheet" href="https://www.maxresing.de/css/boring-0-1-10.css">
+  <link rel="stylesheet" href="https://www.maxresing.de/css/maxresing-1-0-1.css">
+</head>
+
+<body>
+  <nav class="nav" tabindex="-1" onclick="this.focus()">
+    <div class="container">
+        <a class="pagename" href="https://www.maxresing.de">maxresing.de</a>
+        <a href="https://www.maxresing.de/skills.html">Knowledge & Technology</a>
+        <a href="https://www.maxresing.de/projects.html">Projects</a>
+        <a href="https://www.maxresing.de/about.html">About</a>
+    </div>
+  </nav>
+
+  {{ header }}
+
+  <main class="container">
+    <div class="row">
+      <div class="col c12">
+        {{ markdown }}
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer bg-light gray">
+    <div class="container">
+      <div class="row">
+        <div class="col c4 tl">
+          <h3 class="mh">Navigate</h3>
+          <ul>
+            <li><a href="https://static.maxresing.de/doc/CV.pdf">Resume</a></li>
+            <li><a href="https://www.maxresing.de/contact.html">Contact</a></li>
+            <li><a href="https://www.maxresing.de/disclaimer.html">Imprint/Disclaimer</a></li>
+          </ul>
+        </div> <!-- col -->
+        <div class="col c4 tl">
+          <h3 class="mh">Services</h3>
+          <ul>
+            <li><a href="https://static.maxresing.de">static.maxresing.de</a></li>
+            <li><a href="#">Documentation (offline)</a></li>
+            <li><a href="https://bakkiecounter.com">Bakkiecounter</a></li>
+          </ul>
+        </div> <!-- col -->
+        <div class="col c4 tl">
+          <h3 class="mh">Links</h3>
+          <ul>
+            <li><a href="https://www.linkedin.com/in/max-resing">LinkedIn</a></li>
+            <li><a rel="me" href="https://noc.social/@resingm">Mastodon</a></li>
+            <li><a href="https://github.com/resingm">GitHub</a></li>
+            <li><a href="https://codeberg.org/resingm">Codeberg</a></li>
+          </ul>
+        </div> <!-- col -->
+      </div> <!-- row -->
+      <div class="row">
+        <div class="col c12 tc">
+          <hr class="bg-gray"/>
+          <a class="pagename dark" href="https://www.maxresing.de">maxresing.de</a>
+          <br />
+          <span class="ph">&copy; {{ current_year }} Max Resing</span>
+          <br />
+          <a href='https://ipv6-test.com/validate.php?url=maxresing.de'>
+            <img src='https://ipv6-test.com/button-ipv6-small.png' alt='ipv6 ready' title='ipv6 ready' border='0' />
+          </a>
+        </div> <!-- col -->
+      </div> <!-- row -->
+    </div> <!-- container-fluid-->
+  </footer>
+</body>
+</html>
+
