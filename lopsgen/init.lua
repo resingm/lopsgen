@@ -1,22 +1,14 @@
-#!/usr/bin/env lua
-
 require "lopsgen/md"
 require "lopsgen/page"
 require "lopsgen/utils"
 
 
--- load config
--- TODO: Load config from file
 Conf = {
-    base_path = "https://www.maxresing.de",
-    -- base_path = "file:///home/max/workspace/de/maxresing/lopsgen/site",
-    pages = "./content",
-    static = "./static",
-    output = "./site",
-    template = {
-        base = "./layout/base.html",
-        header = "./layout/header.html",
-    },
+    base_path = "",
+    pages = "",
+    static = "",
+    output = "",
+    template = {},
 }
 
 local function blog_selection (pages, n)
@@ -67,13 +59,40 @@ local function render_page(base_template, header_template, page)
 end
 
 
-local function main()
+local function usage()
+    print([[
+lua lopsgen/init.lua
+    -h, --help                      Print this help and exit
+    -i, --input <path>              Define an input path to load pages from
+    -o, --output <path>             Define an output path to write to
+    -s, --static <path>             Define a path with static files copied to output
+        --template-base <path>      Define a specific base template
+        --template-header <path>    Define a specific header template
+    -u, --url <url>                 Define a URL to be used for linking
+    ]])
+    os.exit(1)
+end
+
+local function main(args)
+    if #args == 0 then
+        usage()
+    end
+
+    -- Parse arguments
+    for i, arg in ipairs(args) do
+        if arg == "-h" or arg == "--help" then usage() end
+        if arg == "-i" or arg == "--input" then Conf.pages = string.strip(args[i + 1]) end
+        if arg == "-o" or arg == "--output" then Conf.output = string.strip(args[i + 1]) end
+        if arg == "-s" or arg == "--static" then Conf.static = string.strip(args[i + 1]) end
+        if arg == "--template-base" then Conf.template.base = string.strip(args[i + 1]) end
+        if arg == "--template-header" then Conf.template.header = string.strip(args[i + 1]) end
+        if arg == "-u" or arg == "--url" then Conf.base_path = string.strip(args[i + 1]) end
+    end
+
 
     -- load templates
     local tmp_base, err = ReadTextFileLines(Conf.template.base)
     local tmp_header, err = ReadTextFileLines(Conf.template.header)
-
-    -- local blog, err = generate_blog_struct(Conf.pages .. "/blog")
 
     -- Delete output directory if existing
     os.execute('rm -rd "' .. Conf.output .. '"')
@@ -82,10 +101,9 @@ local function main()
     -- Copy static data into new output directory
     os.execute('cp -r "' .. Conf.static .. '"/* "' .. Conf.output .. '"')
 
-    local source_files = ScanDir(Conf.pages) or {}
-
-    -- find blog pages which are used for announcements
+    -- Scan the "pages" directory and load pages
     local pages = {}
+    local source_files = ScanDir(Conf.pages) or {}
 
     for _, f in ipairs(source_files) do
         local p = Page:new{fname = f}
@@ -147,4 +165,4 @@ local function main()
     Write(pages["index"].path.output, index_html)
 end
 
-main()
+main{ ... } 
